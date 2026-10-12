@@ -20,24 +20,25 @@ The raw transaction export represents point-of-sale data before validation or cl
 
 ---
 
-## 2. Processed Warehouse Schema (`sales` Table in SQLite)
+## 2. Processed Warehouse Schema (`sales` Table in SQLite & MySQL)
 
-Normalized, validated, and enriched transactional records loaded into `data/processed/sales.db`.
+Normalized, validated, and enriched transactional records loaded into the analytics database.
+By default, the pipeline persists to local SQLite (`data/processed/sales.db`). When configured for MySQL (`DB_CONNECTION_URL="mysql+pymysql://..."`), SQLAlchemy maps columns to the equivalent MySQL enterprise types shown below:
 
-| Column Name | SQL Type | Python Type | Primary Key | Nullable | Constraints & Rules | Description |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `order_id` | `TEXT` | `str` | Yes (Unique) | No | Format: `^ORD\d{4}$` | Unique identifier for each transaction |
-| `order_date` | `TEXT` | `str` | No | No | Format: `YYYY-MM-DD` | Standardized ISO 8601 transaction date |
-| `product_name` | `TEXT` | `str` | No | No | Clean Title Case + Acronyms | Standardized product category |
-| `quantity` | `INTEGER` | `int64` | No | No | `quantity >= 1` | Verified positive unit count |
-| `unit_price` | `REAL` | `float64` | No | No | `unit_price > 0.0` | Unit price in USD (2 decimals) |
-| `customer_id` | `TEXT` | `str` | No | No | Format: `^CUST\d{3}$` | Attributed customer identifier |
-| `region` | `TEXT` | `str` | No | No | Title Case (`North`, `South`, `East`, `West`) | Validated geographic zone |
-| `total_price` | `REAL` | `float64` | No | No | `ROUND(quantity * unit_price, 2)` | Total transaction gross amount in USD |
-| `order_month` | `TEXT` | `str` | No | No | Format: `YYYY-MM` | Month grouping for trend analysis |
-| `order_year` | `INTEGER` | `int64` | No | No | `2000 <= order_year <= 2099` | Transaction calendar year |
-| `order_quarter` | `TEXT` | `str` | No | No | Format: `YYYY-Q#` (e.g., `2024-Q1`) | Fiscal quarter grouping |
-| `day_of_week` | `TEXT` | `str` | No | No | `Monday` .. `Sunday` | Day of week for purchasing cycle analysis |
+| Column Name | SQLite Type | MySQL / Postgres Type | Python Type | Primary Key | Nullable | Constraints & Rules | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `order_id` | `TEXT` | `VARCHAR(32)` | `str` | Yes (Unique) | No | Format: `^ORD\d{4}$` | Unique identifier for each transaction |
+| `order_date` | `TEXT` | `DATE` / `VARCHAR(10)` | `str` | No | No | Format: `YYYY-MM-DD` | Standardized ISO 8601 transaction date |
+| `product_name` | `TEXT` | `VARCHAR(100)` | `str` | No | No | Clean Title Case + Acronyms | Standardized product category |
+| `quantity` | `INTEGER` | `INT` | `int64` | No | No | `quantity >= 1` | Verified positive unit count |
+| `unit_price` | `REAL` | `DECIMAL(10,2)` | `float64` | No | No | `unit_price > 0.0` | Unit price in USD (2 decimals) |
+| `customer_id` | `TEXT` | `VARCHAR(32)` | `str` | No | No | Format: `^CUST\d{3}$` | Attributed customer identifier |
+| `region` | `TEXT` | `VARCHAR(50)` | `str` | No | No | Title Case (`North`, `South`, `East`, `West`) | Validated geographic zone |
+| `total_price` | `REAL` | `DECIMAL(10,2)` | `float64` | No | No | `ROUND(quantity * unit_price, 2)` | Total transaction gross amount in USD |
+| `order_month` | `TEXT` | `VARCHAR(7)` | `str` | No | No | Format: `YYYY-MM` | Month grouping for trend analysis |
+| `order_year` | `INTEGER` | `INT` | `int64` | No | No | `2000 <= order_year <= 2099` | Transaction calendar year |
+| `order_quarter` | `TEXT` | `VARCHAR(8)` | `str` | No | No | Format: `YYYY-Q#` (e.g., `2024-Q1`) | Fiscal quarter grouping |
+| `day_of_week` | `TEXT` | `VARCHAR(15)` | `str` | No | No | `Monday` .. `Sunday` | Day of week for purchasing cycle analysis |
 
 ### Database Indexes
 

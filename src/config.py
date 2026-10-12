@@ -66,7 +66,10 @@ class PipelineConfig:
 
     @property
     def db_connection_url(self) -> str:
-        """SQLAlchemy connection string for SQLite."""
+        """SQLAlchemy connection string for SQLite or external database (MySQL, PostgreSQL)."""
+        env_url = os.getenv("DB_CONNECTION_URL")
+        if env_url:
+            return env_url
         # Convert path to posix standard format for SQLite URI
         resolved_path = self.processed_db_path.resolve().as_posix()
         return f"sqlite:///{resolved_path}"

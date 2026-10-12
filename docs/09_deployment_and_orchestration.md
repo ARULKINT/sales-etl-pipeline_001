@@ -106,17 +106,27 @@ The pipeline is intentionally decoupled via SQLAlchemy and Pandas, making cloud 
 | :--- | :--- | :--- |
 | **Ingestion Source** | `data/raw/*.csv` | Amazon S3 / Google Cloud Storage (`gs://`) |
 | **Transform Engine** | Pandas (In-Memory) | AWS Glue, Dataproc, or dbt Core |
-| **Target Warehouse** | SQLite (`sales.db`) | PostgreSQL (RDS), Snowflake, BigQuery |
+| **Target Warehouse** | SQLite (`sales.db`) | MySQL, PostgreSQL (RDS), Snowflake, BigQuery |
 | **Orchestrator** | CLI / Task Scheduler | Apache Airflow (Cloud Composer / AWS MWAA) |
 | **Reporting / BI** | Markdown / HTML Reports | Power BI, Looker Studio, Tableau |
 
-### Migration to PostgreSQL Example:
-To target PostgreSQL instead of SQLite, simply update the SQLAlchemy connection URL in `src/config.py`:
-```python
-# SQLite (Local):
-db_connection_url = "sqlite:///data/processed/sales.db"
+### Database Compatibility: SQLite vs. MySQL / PostgreSQL
 
-# PostgreSQL (Production):
-db_connection_url = "postgresql+psycopg2://user:password@warehouse-host:5432/sales_analytics"
+The default implementation uses **SQLite** (`data/processed/sales.db`), providing a self-contained, zero-configuration database that runs seamlessly across Windows, macOS, and Linux without requiring external database servers or Docker containers.
+
+Because the pipeline utilizes **SQLAlchemy 2.0**, it is natively compatible with **MySQL**, **PostgreSQL**, and other relational engines. To connect to MySQL instead of SQLite, set `DB_CONNECTION_URL` in your `.env` file or export the environment variable:
+
+```bash
+# Option 1: SQLite (Default implementation, zero setup required)
+DB_CONNECTION_URL="sqlite:///data/processed/sales.db"
+
+# Option 2: MySQL (Production / Enterprise)
+# Requires: pip install pymysql (or mysqlclient)
+DB_CONNECTION_URL="mysql+pymysql://db_user:db_password@localhost:3306/sales_db"
+
+# Option 3: PostgreSQL (Production / Cloud)
+# Requires: pip install psycopg2-binary
+DB_CONNECTION_URL="postgresql+psycopg2://db_user:db_password@localhost:5432/sales_analytics"
 ```
-No modifications to the transformation, validation, or extraction logic are necessary.
+
+No alterations to the extraction, profiling, transformation, or validation logic are required.

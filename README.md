@@ -1,13 +1,13 @@
 # 🚀 Sales Data ETL Pipeline (v2.0)
 
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-blue.svg)](https://www.python.org/)
-[![Database](https://img.shields.io/badge/Database-SQLite%20%7C%20SQLAlchemy%202.0-green.svg)](https://www.sqlalchemy.org/)
+[![Database](https://img.shields.io/badge/Database-SQLite%20(Default)%20%7C%20MySQL%20%26%20Postgres-green.svg)](https://www.sqlalchemy.org/)
 [![Testing](https://img.shields.io/badge/Tests-30%20Passed%20(100%25)-brightgreen.svg)](tests/)
 [![Code-Quality](https://img.shields.io/badge/Data%20Retention-92.91%25-orange.svg)](#data-quality-scorecard)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#cross-platform-compatibility)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-An enterprise-grade, modular, and resilient **Extract-Transform-Load (ETL)** data pipeline built in Python and SQL. Ingests messy, heterogeneous retail sales exports, executes pre-cleaning data profiling, applies strict business validation rules, persists normalized transactions into an indexed database, executes analytical SQL queries, and generates automated executive reports.
+An enterprise-grade, modular, and resilient **Extract-Transform-Load (ETL)** data pipeline built in Python and SQL. Ingests messy, heterogeneous retail sales exports, executes pre-cleaning data profiling, applies strict business validation rules, persists normalized transactions into an indexed database (**SQLite** by default with zero setup; fully compatible with **MySQL** and **PostgreSQL** via SQLAlchemy), executes analytical SQL queries, and generates automated executive reports.
 
 ---
 
