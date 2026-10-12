@@ -1,6 +1,40 @@
+# Virtual Environment
 venv/
+env/
+ENV/
+
+# Python Caches & Bytecode
 __pycache__/
-*.pyc
-*.log
-data/processed/*.db
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution & Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing & Coverage
 .pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# Database artifacts & ephemeral exports
+data/processed/*.db
+data/processed/analytics_exports/
+!data/processed/.gitkeep
+
+# Environment variables
+.env
+.env.local
+
+# IDE & Editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo

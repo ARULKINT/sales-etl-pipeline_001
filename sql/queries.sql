@@ -1,7 +1,8 @@
--- Phase 11 - SQL Analysis
--- Each query answers a business question from Phase 1.
+-- ==============================================================================
+-- Sales Data ETL Pipeline — Analytical Queries
+-- ==============================================================================
 
--- 1. Top-selling products by revenue
+-- Query 1: Top-selling products by revenue
 SELECT
     product_name,
     SUM(quantity) AS units_sold,
@@ -11,7 +12,7 @@ GROUP BY product_name
 ORDER BY total_revenue DESC
 LIMIT 10;
 
--- 2. Monthly sales trend
+-- Query 2: Monthly sales trend
 SELECT
     order_month,
     ROUND(SUM(total_price), 2) AS monthly_revenue,
@@ -20,7 +21,7 @@ FROM sales
 GROUP BY order_month
 ORDER BY order_month;
 
--- 3. Top customers by spend
+-- Query 3: Top customers by spend
 SELECT
     customer_id,
     ROUND(SUM(total_price), 2) AS total_spent,
@@ -30,7 +31,7 @@ GROUP BY customer_id
 ORDER BY total_spent DESC
 LIMIT 10;
 
--- 4. Revenue by region
+-- Query 4: Revenue by region
 SELECT
     region,
     ROUND(SUM(total_price), 2) AS total_revenue,
@@ -38,3 +39,22 @@ SELECT
 FROM sales
 GROUP BY region
 ORDER BY total_revenue DESC;
+
+-- Query 5: Quarterly performance breakdown
+SELECT
+    order_quarter,
+    COUNT(DISTINCT order_id) AS total_orders,
+    SUM(quantity) AS units_sold,
+    ROUND(SUM(total_price), 2) AS quarterly_revenue
+FROM sales
+GROUP BY order_quarter
+ORDER BY order_quarter;
+
+-- Query 6: Sales volume by day of week
+SELECT
+    day_of_week,
+    COUNT(DISTINCT order_id) AS order_count,
+    ROUND(SUM(total_price), 2) AS day_revenue
+FROM sales
+GROUP BY day_of_week
+ORDER BY day_revenue DESC;
